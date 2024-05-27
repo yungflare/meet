@@ -107,3 +107,7 @@ Scenario 1: Show a Chart with the number of upcoming events in each city.
 Given there are multiple events in multiple cities;
 When the user views and events details;
 Then a chart displaying the number of upcoming events in each city should be shown.
+
+- Serverless Functions : 
+
+    The Meet app leverages serverless functions to handle authorization for accessing events from the Google Calendar API. Specifically, these serverless functions generate an access token, which serves as authentication to interact with the Google Calendar API. By using AWS Lambda as its cloud service provider, the Meet app benefits from a scalable and cost-efficient architecture. This approach ensures that the app can handle a large number of authorization requests dynamically, without the need for managing dedicated servers, ultimately enhancing the app's efficiency and reliability. 
