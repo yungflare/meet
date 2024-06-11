@@ -1,6 +1,12 @@
-const Event = () => {
+import { useState } from 'react';
+
+
+const Event = ({event}) => {
+    const [showDetails, setShowDetails] = useState(false);
     return (
-        <li></li>
+        <li className='event'>
+
+        </li>
     );
 }
 
