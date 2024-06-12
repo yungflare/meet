@@ -16,5 +16,16 @@ describe('<Event /> component', () => {
         expect(EventComponent.queryByText(event.summary)).toBeInTheDocument();
     });
 
-})
+    test('renders event start time', () => {
+        expect(EventComponent.queryByText(event.created)).toBeInTheDocument();
+    });
+
+    test('renders event location', () => {
+        expect(EventComponent.queryByText(event.location)).toBeInTheDocument();
+    });
+
+    test('renders show details button', () => {
+        expect(EventComponent.queryByText('show details')).toBeInTheDocument();
+    });
+});
 
