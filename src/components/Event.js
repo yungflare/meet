@@ -8,10 +8,15 @@ const Event = ({event}) => {
             <h1>{event.summary}</h1>
             <p>{event.created}</p>
             <p>{event.location}</p>
-            <button>
-                show details
+            <button className='showDetailsButton'
+                onClick={() => setShowDetails(!showDetails)}>
+                    {showDetails ? 'Hide Details' : 'Show Details'}
             </button>
-
+            {showDetails ? (
+                <div className='details'>
+                    <h2>Event Details</h2>
+                    <p>{event.details}</p>
+                </div>) : null}
         </li>
     );
 }

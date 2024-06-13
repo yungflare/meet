@@ -1,13 +1,17 @@
-import { render } from "@testing-library/react";
+import { render, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import CitySearch from "../components/CitySearch";
+import App from "../App";
 import { extractLocations, getEvents } from "../api";
 
 describe('<CitySearch /> component', () => {
     let CitySearchComponent;
+    // const setCurrentCity = jest.fn();
+
     beforeEach(() => {
-        CitySearchComponent = render(<CitySearch />);
+        CitySearchComponent = render(<CitySearch allLocations={[]} />);
     });
+
     test('renders text input', () => {
         const cityTextBox = CitySearchComponent.queryByRole('textbox');
         expect(cityTextBox).toBeInTheDocument();
@@ -49,7 +53,7 @@ describe('<CitySearch /> component', () => {
     const user = userEvent.setup();
     const allEvents = await getEvents(); 
     const allLocations = extractLocations(allEvents);
-    CitySearchComponent.rerender(<CitySearch allLocations={allLocations} />);
+    CitySearchComponent.rerender(<CitySearch allLocations={allLocations}  />);
 
     const cityTextBox = CitySearchComponent.queryByRole('textbox');
     await user.type(cityTextBox, "Berlin");
@@ -58,6 +62,25 @@ describe('<CitySearch /> component', () => {
     await user.click(BerlinGermanySuggestion);
 
     expect(cityTextBox).toHaveValue(BerlinGermanySuggestion.textContent);
+    expect(setCurrentCity).toHaveBeenCalledWith(BerlinGermanySuggestion.textContent);
   });
     
+});
+
+describe('<CitySearch />, integration', () => {
+    test('renders suggestionList when app is rendered and user focus in textbox', async () => {
+        const user = userEvent.setup();
+        const AppComponent = render(<App />);
+        const AppDOM = AppComponent.container.firstChild;
+
+        const CitySearchDom = AppDOM.querySelector('#city-search');
+        const textbox = within(CitySearchDom).queryByRole('textbox');
+        await user.click(textbox);
+
+        const allEvents = await getEvents();
+        const allLocations = extractLocations(allEvents);
+
+        const suggestionList = within(CitySearchDom).queryAllByRole('listitem');
+        expect(suggestionList.length).toBe(allLocations.length + 1);
+    });
 });
