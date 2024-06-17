@@ -96,10 +96,10 @@ describe('<CitySearch /> component', () => {
 
                         test('renders suggestionList when app is rendered and user focus in textbox', async () => {
                             const user = userEvent.setup();
-                            const appComponent = render( < App / > );
-                            const appDom = appComponent.container.firstChild;
+                            const AppComponent = render( < App / > );
+                            const AppDOM = AppComponent.container.firstChild;
 
-                            const citySearchDom = appDom.querySelector('#city-search');
+                            const citySearchDom = AppDOM.querySelector('#city-search');
                             const textbox = within(citySearchDom).queryByRole('textbox');
                             await user.click(textbox);
 
