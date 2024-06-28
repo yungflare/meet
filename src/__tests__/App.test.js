@@ -11,7 +11,7 @@ describe('<App /> component', () => {
     });
 
     test('renders list of events', () => {
-        expect(AppDOM.querySelector('#event-list')).toBeInTheDocument ();
+        expect(AppDOM.querySelector('#event-list')).toBeInTheDocument();
     });
 
     test('render CitySearch', () => {
@@ -29,19 +29,25 @@ describe('<App />, integration', () => {
         const user = userEvent.setup();
         const AppComponent = render(<App />);
         const AppDOM = AppComponent.container.firstChild;
-        const CitySearchComponent = AppDOM.querySelector('#city-search');
-        const textbox = within(CitySearchComponent).queryByRole('textbox');
+        const CitySearchDOM = AppDOM.querySelector('#city-search');
+        const CitySearchInput = within(CitySearchDOM).queryByRole('textbox');
+        await user.type(CitySearchInput, "Berlin");
+        const berlinSuggestionItem = within(CitySearchDOM).queryByText('Berlin, Germany');
 
-        await user.type(textbox, 'Berlin');
-        const berlinSuggestionItem = within(CitySearchComponent).queryByText('Berlin, Germany');
         await user.click(berlinSuggestionItem);
+        const EventListDOM = AppDOM.querySelector('#event-list');
+        const allRenderedEventItems = within(EventListDOM).queryAllByRole('listitem');   
         const allEvents = await getEvents();
-        const filteredEvents = allEvents.filter((event) => {
-            return event.location == 'Berlin, Germany';
+
+        const berlinEvents = allEvents.filter(
+            event => event.location === 'Berlin, Germany'
+          );
+  
+          expect(allRenderedEventItems.length).toBe(berlinEvents.length);
+          allRenderedEventItems.forEach(event => {
+              expect(event.textContent).toContain("Berlin, Germany");
+            });
         });
+  });
         
-        const eventListDOM = AppDOM.querySelector('#event-list');
-        const renderedEvents = within(eventListDOM).queryAllByRole('listitem');
-        expect(renderedEvents.length).toBe(filteredEvents.length);
-    })
-})
+    
